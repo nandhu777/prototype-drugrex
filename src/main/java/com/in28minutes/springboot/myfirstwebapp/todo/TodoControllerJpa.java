@@ -27,24 +27,6 @@ import jakarta.validation.Valid;
 
 public class TodoControllerJpa {
 
-	private TodoRepository todoRepository;
-	
-	public TodoControllerJpa(TodoRepository todoRepository) {
-		super();
-		this.todoRepository = todoRepository;
-	}
-
-	@RequestMapping("list-todos")
-	public String listAllTodos(ModelMap model) {
-		String username = getLoggedInUsername(model);
-				
-		List<Todo> todos = todoRepository.findByUsername(username);
-		model.addAttribute("todos", todos);
-		
-		return "search";
-	}
-	
-	
 	@RequestMapping("many-form")
 	public String manyForm(@RequestParam("myCountry") String nameSearch,ModelMap model) {
 		
@@ -107,8 +89,7 @@ public class TodoControllerJpa {
 	            return "feverimg";
 	}
 	
-	
-	
+
 	
 	@RequestMapping("/contact")
 	public String contactForm() {
@@ -117,22 +98,12 @@ public class TodoControllerJpa {
 	            return "contact";
 	}
 	
-	
-	
 
 		@Autowired
 		private MailService notificationService;
 	 
 		@Autowired
 		private User user;
-	 
-		/**
-		 *
-		 * @return
-		 */
-		
-		
-		
 		
 		@RequestMapping("/send-mail")
 		@ResponseBody
@@ -174,94 +145,6 @@ public class TodoControllerJpa {
 		}
 	
 	 
-//	@RequestMapping("many-form")
-//	public String manyForm(@RequestParam("myCountry") String nameSearch,ModelMap model) {
-//		String myStr1 = "fever";
-//		String myStr2 = "malaria";
-//		String myStr3 = "hiv";
-//		if(myStr1.equalsIgnoreCase(nameSearch))
-//		{   
-//			model.addAttribute("searchname",nameSearch);
-//			return "fever";
-//		}
-//		else if(myStr2.equalsIgnoreCase(nameSearch))
-//				{   
-//			model.addAttribute("searchname",nameSearch);
-//				   return "malaria";
-//		         }
-//		else if(myStr3.equalsIgnoreCase(nameSearch))
-//		{ 
-//			model.addAttribute("searchname",nameSearch);
-//		   return "hiv";
-//        }
-//         
-//		else {
-//			
-//			return "Hello! What are you learning today?";
-//		}
-//		
-//		
-//	
-//		
-//	}
-//
-//	
-//	
-//	
-//	
-	
-	
-	//GET, POST
-	@RequestMapping(value="add-todo", method = RequestMethod.GET)
-	public String showNewTodoPage(ModelMap model) {
-		String username = getLoggedInUsername(model);
-		Todo todo = new Todo(0, username, "", LocalDate.now().plusYears(1), false);
-		model.put("todo", todo);
-		return "todo";
-	}
-
-	@RequestMapping(value="add-todo", method = RequestMethod.POST)
-	public String addNewTodo(ModelMap model, @Valid Todo todo, BindingResult result) {
-		
-		if(result.hasErrors()) {
-			return "todo";
-		}
-		
-		String username = getLoggedInUsername(model);
-		todo.setUsername(username);
-		todoRepository.save(todo);
-//		todoService.addTodo(username, todo.getDescription(), 
-//				todo.getTargetDate(), todo.isDone());
-		return "redirect:list-todos";
-	}
-
-	@RequestMapping("delete-todo")
-	public String deleteTodo(@RequestParam int id) {
-		//Delete todo
-		todoRepository.deleteById(id);
-		return "redirect:list-todos";
-		
-	}
-
-	@RequestMapping(value="update-todo", method = RequestMethod.GET)
-	public String showUpdateTodoPage(@RequestParam int id, ModelMap model) {
-		Todo todo = todoRepository.findById(id).get();
-		model.addAttribute("todo", todo);
-		return "todo";
-	}
-
-	@RequestMapping(value="update-todo", method = RequestMethod.POST)
-	public String updateTodo(ModelMap model, @Valid Todo todo, BindingResult result) {
-		
-		if(result.hasErrors()) {
-			return "todo";
-		}
-		
-		String username = getLoggedInUsername(model);
-		todo.setUsername(username);
-		todoRepository.save(todo);
-		return "redirect:list-todos";
-	}
 
 	private String getLoggedInUsername(ModelMap model) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

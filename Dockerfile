@@ -3,6 +3,6 @@ COPY . .
 RUN mvn clean package -DskipTests
 
 FROM openjdk:17.0.1-jdk-slim
-COPY --from=build /target/02.Spring-Boot-Web-Application-V2-0.0.1-SNAPSHOT.jar 02.Spring-Boot-Web-Application-V2.jar
+COPY --from=build /target/myfirstwebapp-0.0.1-SNAPSHOT.jar myfirstwebapp.jar
 EXPOSE 5000
-ENTRYPOINT ["java","-jar","02.Spring-Boot-Web-Application-V2.jar"]
+ENTRYPOINT ["java","-jar","myfirstwebapp.jar"]
